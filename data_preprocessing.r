@@ -48,9 +48,7 @@ matches_data_preprocessing <- function(data){
              ,Result_Tie = ifelse(Match_Result=="Tie",1,0)
              ,Result_Away = ifelse(Match_Result=="Away",1,0))]
 
-  temp[,Score:=NULL]
-  temp[,Match_DateTime:=NULL]
-
+  temp[,c('Score','Match_DateTime','AWA_FLAG','POSTP_FLAG','CAN_FLAG'):=NULL]
   gc()
   return(temp)
 }
