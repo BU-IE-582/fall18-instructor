@@ -62,7 +62,7 @@ matches_data_preprocessing <- function(data){
 #' @export
 #' @examples
 
-details_data_preprocessing <- function(data,matches,which_bets=c('1x2'),remove_bookmaker=c('BetfairExchange','PaddyPower'),removeOlderThan=10){
+details_data_preprocessing <- function(data,matches,which_bets=c('1x2'),remove_bookmaker=c('BetfairExchange','PaddyPower'),removeOlderThan=30){
   # data manipulation for historical odd data
   details = copy(data)
   
@@ -71,8 +71,7 @@ details_data_preprocessing <- function(data,matches,which_bets=c('1x2'),remove_b
 
   details = details[betType %in% which_bets]
   details[,totalhandicap:=NULL]
-  details = details[complete.cases(details)]
-  
+
   details = merge(details,matches[,list(matchId,Match_Date)],by="matchId",all.x=T)
   setnames(details,"date","OddChangeDateTime")
   details[,OddChangeDateTime:=as.POSIXct(OddChangeDateTime,tz="UTC",origin = as.POSIXct("1970-01-01",tz="UTC"))]
