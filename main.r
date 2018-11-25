@@ -17,9 +17,16 @@ matches_raw=readRDS(matches_data_path)
 odd_details_raw=readRDS(odd_details_data_path)
 
 # preprocess matches
-
 matches=matches_data_preprocessing(matches_raw)
+
+# preprocess odd data
 odd_details=details_data_preprocessing(odd_details_raw,matches)
 
+# extract open and close odd type features from multiple bookmakers
 features=extract_features.openclose(matches,odd_details,pMissThreshold=rem_miss_threshold,trainStart,testStart)
+
+# divide data based on the provided dates 
+train_features=features[Match_Date>=trainStart & Match_Date<testStart] 
+test_features=features[Match_Date>=testStart] 
+
 
