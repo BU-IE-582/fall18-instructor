@@ -56,37 +56,34 @@ matches_data_preprocessing <- function(data){
 #' Data Preprocessing for Odd Details Data
 #'
 #' Makes preprocessing on raw odd details data so that it can be used by other functions.
-#'
+#' only 1x2 bets are considered, if you are interested in other type of odds manipulate ''which_bets''
 #' @param data A data.table containing raw odd details data
 #' @param remove_bookmaker A character vector containing the bookmakers to be removed
 #' @export
 #' @examples
-#' details_data_preprocessing(details,remove_bookmaker=c('Betfair Exchange','Paddy Power'))
-#'
-details_data_preprocessing <- function(data,matches,modelSet=NULL,remove_bookmaker=NULL,removeOlderThan=10){
+
+details_data_preprocessing <- function(data,matches,which_bets=c('1x2'),remove_bookmaker=c('BetfairExchange','PaddyPower'),removeOlderThan=10){
   # data manipulation for historical odd data
   details = copy(data)
+  
+  #remove duplicate entries
   details = unique(details)
+
+  details = details[betType %in% which_bets]
+  details[,totalhandicap:=NULL]
+  details = details[complete.cases(details)]
+  
   details = merge(details,matches[,list(matchId,Match_Date)],by="matchId",all.x=T)
   setnames(details,"date","OddChangeDateTime")
   details[,OddChangeDateTime:=as.POSIXct(OddChangeDateTime,tz="UTC",origin = as.POSIXct("1970-01-01",tz="UTC"))]
   details = details[difftime(Match_Date,OddChangeDateTime, units = "days") <= removeOlderThan] #remove odds seen earlier than 10 days from the match date
-
   details[, odd := as.numeric(odd)]
-  details[, c('date') := NULL]
 
   details[,bookmaker:=gsub(" |-","",bookmaker)]
   if(!is.null(remove_bookmaker)){
     details = details[!(bookmaker %in% remove_bookmaker)]
   }
-  # over/under simdilik dahil degil
-  details = details[betType=='1x2']
-  details[,totalhandicap:=NULL]
-  details = details[complete.cases(details)]
 
-  if(!is.null(modelSet)){
-    class(details) <- append(class(details),modelSet)
-  }
   gc()
   return(details)
 }
