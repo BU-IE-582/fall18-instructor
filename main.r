@@ -3,7 +3,7 @@ setwd('/home/baydogan/Courses/IE582/ProjectRepo/fall18-instructor/')
 
 testStart=as.Date('2018-11-16')
 trainStart=as.Date('2012-07-15')
-rem_miss_threshold=0.01 #parameter for removing bookmaker odds with missing ration greater than this fraction
+rem_miss_threshold=0.01 #parameter for removing bookmaker odds with missing ratio greater than this threshold
 
 source('data_preprocessing.r')
 source('feature_extraction.r')
