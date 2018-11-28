@@ -1,5 +1,6 @@
 require(data.table)
 require(TunePareto)
+require(glmnet)
 
 setwd('/home/baydogan/Courses/IE582/ProjectRepo/fall18-instructor/')
 
